@@ -1,7 +1,10 @@
 {
   "name": "extension-loader",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "patch.js",
+  "scripts": {
+    "start": "node patch.js"
+  },
   "license": "MIT",
   "dependencies": {
     "asar": "^3.1.0"
