@@ -27,8 +27,8 @@ app.on("ready", async () => {
     }
 
     for (const file of files) {
+        const ext = path.join(extensionsDir, file);
         try {
-            const ext = path.join(extensionsDir, file);
             await session.defaultSession.loadExtension(ext, {allowFileAccess: true});
             console.log("[EL] Loaded extension from " + ext);
             loaded++;
