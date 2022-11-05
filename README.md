@@ -14,6 +14,6 @@ containing an `index.js` file, which will be required into the main process at l
 If you want to use TETR.IO Plus, you won't be able to use this tool at the same time. Pick one or the other.
 
 If you somehow install malware into your client, it's not my fault. This is primarily a tool for bot developers, or
-other users who may find it useful to have a modified client. If you don't know what you're doing.
+other users who may find it useful to have a modified client. If you don't know what you're doing, leave this well alone.
 
 Released under the [MIT License](LICENSE.txt).
