@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 16
           cache: yarn
-      - run: yarn install
+      - run: yarn install --prod
         name: Install dependencies
       - run: wget -O tetrio.tgz https://tetr.io/about/desktop/builds/TETR.IO%20Setup.tar.gz
         name: Download TETR.IO Desktop
