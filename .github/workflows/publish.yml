@@ -1,6 +1,9 @@
 name: Publish
 run-name: Build and publish a patched app.asar
-on: [ push ]
+on:
+  push:
+    branches:
+      - main
 jobs:
   Publish:
     runs-on: ubuntu-latest
@@ -26,8 +29,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.sha }}
+          release_name: Release triggered by run ${{ github.run_id }}
           draft: true
           prerelease: false
       - uses: actions/upload-release-asset@v1
