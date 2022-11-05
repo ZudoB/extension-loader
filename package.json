@@ -1,9 +1,9 @@
 {
   "name": "extension-loader",
   "version": "1.0.0",
-  "main": "patch.js",
+  "main": "bin/patch.js",
   "scripts": {
-    "start": "node patch.js"
+    "start": "node bin/patch.js"
   },
   "license": "MIT",
   "dependencies": {

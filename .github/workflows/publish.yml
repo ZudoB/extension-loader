@@ -1,0 +1,23 @@
+name: Publish
+run-name: Build and publish a patched app.asar
+on: [ push ]
+jobs:
+  Publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+      - run: wget -O tetrio.tgz https://tetr.io/about/desktop/builds/TETR.IO%20Setup.tar.gz
+      - run: tar zxvf tetrio.tgz --wildcards --no-anchored 'app.asar' --strip-components=2
+      - run: yarn start
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
