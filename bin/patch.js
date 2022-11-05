@@ -6,17 +6,14 @@ const OUT = "app-patched.asar";
 const TEMP = "_temp";
 
 const POTENTIAL_ASAR_PATHS = [
-    // current directory
-    "app.asar",
-
-    // install directory on windows
-    path.join(process.env.LOCALAPPDATA, "Programs", "tetrio-desktop", "resources", "app.asar"),
-
-    // install directory on macos
-    "/Applications/TETR.IO.app/Contents/Resources/app.asar"
-
-    // idk where it installs with the .deb package i'll check later ig
+    "app.asar"
 ];
+
+if (process.platform === "win32") {
+    POTENTIAL_ASAR_PATHS.push(path.join(process.env.LOCALAPPDATA, "Programs", "tetrio-desktop", "resources", "app.asar"));
+} else if (process.platform === "darwin") {
+    POTENTIAL_ASAR_PATHS.push("/Applications/TETR.IO.app/Contents/Resources/app.asar");
+}
 
 const PATCH_JS = `
 
