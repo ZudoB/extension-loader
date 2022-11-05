@@ -73,7 +73,7 @@ function getTitle(t) {
 app.on("browser-window-created", (e, bw) => {
     bw.webContents.userAgent += " (zudo/extension-loader)";
 
-    console.log(bw.webContents.getURL());
+    if (bw.title !== "TETR.IO") return;
 
     bw.on("page-title-updated", (e, t) => {
         e.preventDefault();
