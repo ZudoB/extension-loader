@@ -49,7 +49,7 @@ async function purgeTemp() {
  * @returns {Promise<void>}
  */
 async function patch() {
-    await fs.copyFile("zExtLoaderPatch.js", path.join(TEMP, "zExtLoaderPatch.js"));
+    await fs.copyFile(path.join(__dirname, "../src/zExtLoaderPatch.js"), path.join(TEMP, "zExtLoaderPatch.js"));
     const mainPath = path.join(TEMP, "main.js");
 
     let mainSrc = await fs.readFile(mainPath, "utf8");
