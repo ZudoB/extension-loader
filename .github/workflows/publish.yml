@@ -1,0 +1,44 @@
+name: Publish
+run-name: Build and publish a patched app.asar
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Check out repository
+      - uses: actions/setup-node@v3
+        name: Install Node.js
+        with:
+          node-version: 16
+          cache: yarn
+      - run: yarn install
+        name: Install dependencies
+      - run: wget -O tetrio.tgz https://tetr.io/about/desktop/builds/TETR.IO%20Setup.tar.gz
+        name: Download TETR.IO Desktop
+      - run: tar zxvf tetrio.tgz --wildcards --no-anchored 'app.asar' --strip-components=2
+        name: Extract app.asar
+      - run: yarn start
+        name: Patch app.asar
+      - uses: actions/create-release@v1
+        name: Create release
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.sha }}
+          release_name: Release triggered by run ${{ github.run_id }}
+          draft: true
+          prerelease: false
+      - uses: actions/upload-release-asset@v1
+        name: Upload app.asar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./app-patched.asar
+          asset_name: app.asar
+          asset_content_type: application/octet-stream

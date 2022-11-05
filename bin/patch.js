@@ -2,21 +2,18 @@ const fs = require("fs/promises");
 const path = require("path");
 const asar = require("asar");
 
-const OUT = path.join(__dirname, "app-patched.asar");
-const TEMP = path.join(__dirname, "_temp");
+const OUT = "app-patched.asar";
+const TEMP = "_temp";
 
 const POTENTIAL_ASAR_PATHS = [
-    // current directory
-    path.join(__dirname, "app.asar"),
-
-    // install directory on windows
-    path.join(process.env.LOCALAPPDATA, "Programs", "tetrio-desktop", "resources", "app.asar"),
-
-    // install directory on macos
-    "/Applications/TETR.IO.app/Contents/Resources/app.asar"
-
-    // idk where it installs with the .deb package i'll check later ig
+    "app.asar"
 ];
+
+if (process.platform === "win32") {
+    POTENTIAL_ASAR_PATHS.push(path.join(process.env.LOCALAPPDATA, "Programs", "tetrio-desktop", "resources", "app.asar"));
+} else if (process.platform === "darwin") {
+    POTENTIAL_ASAR_PATHS.push("/Applications/TETR.IO.app/Contents/Resources/app.asar");
+}
 
 const PATCH_JS = `
 
@@ -52,7 +49,7 @@ async function purgeTemp() {
  * @returns {Promise<void>}
  */
 async function patch() {
-    await fs.copyFile("zExtLoaderPatch.js", path.join(TEMP, "zExtLoaderPatch.js"));
+    await fs.copyFile(path.join(__dirname, "../src/zExtLoaderPatch.js"), path.join(TEMP, "zExtLoaderPatch.js"));
     const mainPath = path.join(TEMP, "main.js");
 
     let mainSrc = await fs.readFile(mainPath, "utf8");
