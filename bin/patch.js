@@ -19,6 +19,7 @@ const PATCH_JS = `
 
 // load extension loader patch
 require("./zExtLoaderPatch");
+
 `;
 
 /**
@@ -54,7 +55,7 @@ async function patch() {
 
     let mainSrc = await fs.readFile(mainPath, "utf8");
     if (mainSrc.indexOf("zExtLoaderPatch") === -1) { // don't append additional patch calls if we're updating
-        mainSrc += PATCH_JS;
+        mainSrc = PATCH_JS + mainSrc;
         await fs.writeFile(mainPath, mainSrc);
     }
 }

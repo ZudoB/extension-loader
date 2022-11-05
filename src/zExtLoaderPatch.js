@@ -12,10 +12,37 @@ function rdPromise(dir) {
     });
 }
 
+// count number of loaded extensions
 let loaded = 0;
 let errored = 0;
 
-// load extensions
+// LOAD NATIVE EXTENSIONS
+// blocking calls are deliberate, this way we can handle early events (like the main window opening)
+const extensionsDir = path.join(app.getPath("userData"), "nativeExtensions");
+
+let files = [];
+
+try {
+    files = fs.readdirSync(extensionsDir);
+} catch (e) {
+    console.warn("[EL] couldn't read native extensions directory", e);
+}
+
+for (const file of files) {
+    const ext = path.join(extensionsDir, file, "index.js");
+
+    try {
+        require(ext);
+        console.log("[EL] Loaded native extension from " + ext);
+        loaded++;
+    } catch (e) {
+        console.warn("[EL] Couldn't load native extension from " + ext, e);
+        errored++;
+    }
+}
+
+// LOAD WEBEXTENSIONS
+// we can be a little less aggressive here
 app.on("ready", async () => {
     const extensionsDir = path.join(app.getPath("userData"), "extensions");
 
@@ -39,15 +66,17 @@ app.on("ready", async () => {
     }
 });
 
-function getTitle() {
-    return `TETR.IO Desktop - ${loaded} extension${loaded !== 1 ? "s" : ""} loaded${errored > 0 ? ", " + errored + " failed" : ""}`
+function getTitle(t) {
+    return `${t} - ${loaded} extension${loaded !== 1 ? "s" : ""} loaded${errored > 0 ? ", " + errored + " failed" : ""}`;
 }
 
 app.on("browser-window-created", (e, bw) => {
-    bw.title = getTitle();
+    bw.webContents.userAgent += " (zudo/extension-loader)";
 
-    bw.on("page-title-updated", e => {
+    console.log(bw.webContents.getURL());
+
+    bw.on("page-title-updated", (e, t) => {
         e.preventDefault();
-        bw.title = getTitle();
+        bw.title = getTitle(t);
     });
-})
+});
