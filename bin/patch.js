@@ -13,6 +13,8 @@ if (process.platform === "win32") {
     POTENTIAL_ASAR_PATHS.push(path.join(process.env.LOCALAPPDATA, "Programs", "tetrio-desktop", "resources", "app.asar"));
 } else if (process.platform === "darwin") {
     POTENTIAL_ASAR_PATHS.push("/Applications/TETR.IO.app/Contents/Resources/app.asar");
+} else if (process.platform === "linux") {
+    POTENTIAL_ASAR_PATHS.push("/opt/TETR.IO/resources/app.asar");
 }
 
 const PATCH_JS = `
